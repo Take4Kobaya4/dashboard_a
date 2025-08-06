@@ -81,7 +81,7 @@ class User extends Authenticatable
     // 名前を部分一致検索
     public function scopeSearch(Builder $query, $search)
     {
-        return $query->where('name', 'like', "%{$search}%");
+        return $query->where('name', 'like', '%' . $search . '%');
     }
 
     // 一覧表示のページ数

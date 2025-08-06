@@ -21,8 +21,6 @@ class AuthController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'last_login_at' => now(),
-            'is_online' => true,
         ]);
 
         $token = $user->createToken('auth_token')->plainTextToken;
@@ -43,14 +41,15 @@ class AuthController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
-        // パスワードチェック
+        // パスワードチェックが正しくないまたはユーザーが見つからない場合、エラーを返す
         if (!$user || !Hash::check($request->password, $user->password)) {
             return response()->json([
-                'message' => 'Unauthorized'
+                'message' => 'The provided credentials are incorrect.'
             ], 401);
         }
 
         $token = $user->createToken('auth_token')->plainTextToken;
+        // ログイン状態の更新(modelから呼び出し)
         $user->updateLoginStatus();
         return response()->json([
             'message' => 'User logged in successfully',
@@ -62,7 +61,8 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         $request->user()->tokens()->delete();
-        $request->user()->update(['is_online' => false]);
+        // ログアウトの状態更新(is_onlineをfalseへ更新)
+        $request->user()->updateLogoutStatus();
         return response()->json([
             'message' => 'User logged out successfully'
         ]);
