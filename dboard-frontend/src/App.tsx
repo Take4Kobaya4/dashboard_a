@@ -22,19 +22,19 @@ const queryClient = new QueryClient({
 });
 
 function App() {
-  
+
 
   return (
     <ConfigProvider locale={jaJP}>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
           <BrowserRouter>
-            <Routes>
-              {/* パブリックルート */}
-              <Route path="/login" element={<LoginPage />}/>
-              <Route path="/register" element={<RegisterPage />}/>
-              {/* 保護ルート */}
-            </Routes>
+              <Routes>
+                {/* パブリックルート */}
+                <Route path="/login" element={<LoginPage />}/>
+                <Route path="/register" element={<RegisterPage />}/>
+                {/* 保護ルート */}
+              </Routes>
           </BrowserRouter>
         </AuthProvider>
       </QueryClientProvider>
