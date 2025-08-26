@@ -10,7 +10,7 @@ export const useLogin = () => {
         mutationFn: async (data: LoginData) => {
             await authApi.login(data);
         },
-        onSuccess: () => qc.invalidateQueries({ queryKey: ['me']}),
+        onSuccess: () => qc.invalidateQueries({ queryKey: ['auth']}),
     });
 }
 
@@ -20,7 +20,7 @@ export const useRegister = () => {
         mutationFn: async (data: RegisterData) => {
             await authApi.register(data);
         },
-        onSuccess: () => qc.invalidateQueries({ queryKey: ['me']}),
+        onSuccess: () => qc.invalidateQueries({ queryKey: ['auth']}),
     });
 }
 
@@ -30,14 +30,14 @@ export const useLogout = () => {
         mutationFn: async () => {
             await authApi.logout();
         },
-        onSuccess: () => qc.invalidateQueries({ queryKey: ['me']}),
+        onSuccess: () => qc.invalidateQueries({ queryKey: ['auth']}),
     });
 }
 
 export const useFetchMe = () => {
     return useQuery<User>({
-        queryKey: ['me'],
-        queryFn: () => authApi.getMe(),
+        queryKey: ['auth'],
+        queryFn: () => authApi.getCurrentUser(),
         retry: false,
     });
 }

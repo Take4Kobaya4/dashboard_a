@@ -7,6 +7,8 @@ import { AuthProvider } from './features/auth/contexts/AuthContext';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { LoginPage } from './features/auth/pages/LoginPage';
 import { RegisterPage } from './features/auth/pages/RegisterPage';
+import { ProtectedRoute } from './shared/components/ProtectedRoute';
+import { UserListPage } from './features/users/pages/UserListPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -34,6 +36,11 @@ function App() {
                 <Route path="/login" element={<LoginPage />}/>
                 <Route path="/register" element={<RegisterPage />}/>
                 {/* 保護ルート */}
+                <Route path="/users" element={
+                  <ProtectedRoute>
+                    <UserListPage />
+                  </ProtectedRoute>
+                } />
               </Routes>
           </BrowserRouter>
         </AuthProvider>

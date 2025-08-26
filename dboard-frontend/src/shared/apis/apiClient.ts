@@ -13,14 +13,33 @@ export const apiClient = axios.create({
     },
 });
 
-// リクエストインターセプターの設定
-apiClient.interceptors.request.use(async (config) => {
-    // CSRF Cookieを取得
-    if (!document.cookie.includes('XSRF-TOKEN')) {
-        await axios.get(`http://localhost/sanctum/csrf-cookie`, {
-            withCredentials: true,
-        });
+// トークンを取得する関数
+export const getAuthToken = (): string | null => {
+    return localStorage.getItem('auth_token');
+};
+
+// トークンを保存する関数
+export const setAuthToken = (token: string): void => {
+    localStorage.setItem('auth_token', token);
+};
+
+// トークンを削除する関数
+export const removeAuthToken = (): void => {
+    localStorage.removeItem('auth_token');
+};
+
+// リクエストインターセプターでトークンを自動付与
+apiClient.interceptors.request.use((config) => {
+    const token = getAuthToken();
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
 });
+
+// CSRFクッキーの取得
+export const getCsrfCookie = async () => {
+    await apiClient.get('/sanctum/csrf-cookie');
+};
+
 

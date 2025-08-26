@@ -15,14 +15,12 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $query = User::search();
+        $search = $request->input('search', '');
+        $query = $search ? User::search($search) : User::query();
 
         $users = $query->orderBy('created_at', 'desc')->paginate(User::PER_PAGE);
 
-        return response()->json([
-            'message' => 'Users fetched successfully',
-            'success' => true,
-        ]);
+        return response()->json($users);
     }
 
     /**
@@ -155,7 +153,7 @@ class UserController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => `{$updatedLogoutUsers->count()} users logged out successfully`,
+            'message' => "{$updatedLogoutUsers} users logged out successfully",
         ]);
     }
 

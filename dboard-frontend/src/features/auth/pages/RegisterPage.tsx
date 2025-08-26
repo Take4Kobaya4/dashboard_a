@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { useAuth } from "../hooks/useAuth";
 import { Navigate, useNavigate } from "react-router-dom";
 import { RegisterForm } from "../components/RegisterForm";
+import { LoadingSpinner } from "../../../shared/components/LoadingSpinner";
 
 
 const PageContainer = styled.div`
@@ -18,7 +19,7 @@ export const RegisterPage = () => {
     const navigate = useNavigate();
 
     if (isLoading) {
-        return <div>Loading...</div>;
+        return <LoadingSpinner />;
     }
 
     if (user) {

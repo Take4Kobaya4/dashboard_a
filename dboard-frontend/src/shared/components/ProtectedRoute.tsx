@@ -1,8 +1,8 @@
 import type { ReactNode } from "react";
 import styled from "styled-components";
-import { useAuth } from "../../features/users/hooks/useAuth";
-import { Navigate, useLocation } from "react-router-dom";
+import { useAuth } from "../../features/auth/hooks/useAuth";
 import { Spin } from "antd";
+import { Navigate } from "react-router-dom";
 
 
 const LoadingContainer = styled.div`
@@ -18,7 +18,6 @@ interface ProtectedRouteProps {
 
 export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
     const { user, isLoading } = useAuth();
-    const location = useLocation();
 
     if(isLoading) {
         return (
@@ -28,9 +27,10 @@ export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
         );
     }
 
-    // ユーザーでない時、ログイン画面へ遷移
-    if (!user) {
-        return <Navigate to="/login" state={{ from: location }} replace />;
+    // ユーザーでない時、ログイン画面へ遷移
+    if (user) {
+        return <>{children}</>;
     } 
-    return <>{children}</>;
+    
+    return <Navigate to="/login" replace />;
 }
