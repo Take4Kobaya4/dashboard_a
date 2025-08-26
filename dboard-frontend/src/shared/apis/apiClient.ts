@@ -21,6 +21,8 @@ export const getAuthToken = (): string | null => {
 // トークンを保存する関数
 export const setAuthToken = (token: string): void => {
     localStorage.setItem('auth_token', token);
+    // トークン保存後にAPIクライアントのヘッダーも即座に更新
+    apiClient.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 };
 
 // トークンを削除する関数

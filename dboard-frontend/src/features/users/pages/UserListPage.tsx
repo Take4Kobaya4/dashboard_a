@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { useUsers } from "../hooks/useUsers";
 import { LoadingSpinner } from "../../../shared/components/LoadingSpinner";
 import type { User } from "../types/user";
+import { Layout } from "../../../shared/components/Layout";
 
 
 const { Title } = Typography;
@@ -64,7 +65,7 @@ export const UserListPage = () => {
                         type="link"
                         onClick={() => navigate(`/users/${record.id}`)}
                     >
-                        詳細
+                        Show
                     </Button>
                 </Space>
             ),
@@ -76,6 +77,7 @@ export const UserListPage = () => {
 
     return (
         <>
+            <Layout>
             <Header>
                 <Title level={2} style={{ margin: 0 }}>
                     ユーザー一覧
@@ -102,6 +104,7 @@ export const UserListPage = () => {
                         `${range[0]}-${range[1]} の ${total} 件`,
                 }}
             />
+            </Layout>
         </> 
     );
 }

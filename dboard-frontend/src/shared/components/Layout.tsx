@@ -55,9 +55,13 @@ export const Layout = ({ children }: LayoutProps) => {
     const handleLogout = async() => {
         try {
             await logout();
+            // ログアウト成功後、ログインページに遷移
             navigate('/login');
         } catch (error) {
             console.error('Logout failed:', error);
+            // エラーが発生した場合でも、ローカルストレージをクリアしてログインページに遷移
+            localStorage.removeItem('auth_token');
+            navigate('/login');
         }
     }
 

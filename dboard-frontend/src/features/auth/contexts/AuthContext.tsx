@@ -29,7 +29,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
     const login = async (data: LoginData) => {
         await loginMutation.mutateAsync(data);
-        await refetch();
+        // トークン保存後に少し遅延を設けてからrefetchを実行
+        setTimeout(async () => {
+            await refetch();
+        }, 100);
     }
 
     const register = async (data: RegisterData) => {
@@ -39,7 +42,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
     const logout = async () => {
         await logoutMutation.mutateAsync();
-        await refetch();
     }
 
     const value: AuthContextType = {

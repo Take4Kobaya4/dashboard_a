@@ -11,6 +11,8 @@ export const authApi = {
         // トークンを保存
         if (response.data.token) {
             setAuthToken(response.data.token);
+            // トークン保存後にAPIクライアントのヘッダーを即座に更新
+            apiClient.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
         }
         return response.data.user;
     },
@@ -22,6 +24,8 @@ export const authApi = {
         // トークンを保存
         if (response.data.token) {
             setAuthToken(response.data.token);
+            // トークン保存後にAPIクライアントのヘッダーを即座に更新
+            apiClient.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
         }
         return response.data.user;
     },

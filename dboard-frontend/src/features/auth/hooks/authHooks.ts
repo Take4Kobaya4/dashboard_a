@@ -8,9 +8,15 @@ export const useLogin = () => {
     const qc = useQueryClient();
     return useMutation({
         mutationFn: async (data: LoginData) => {
-            await authApi.login(data);
+            const result = await authApi.login(data);
+            return result;
         },
-        onSuccess: () => qc.invalidateQueries({ queryKey: ['auth']}),
+        onSuccess: () => {
+            // ログイン成功後、少し遅延を設けてからクエリを無効化
+            setTimeout(() => {
+                qc.invalidateQueries({ queryKey: ['auth']});
+            }, 50);
+        },
     });
 }
 
@@ -30,7 +36,12 @@ export const useLogout = () => {
         mutationFn: async () => {
             await authApi.logout();
         },
-        onSuccess: () => qc.invalidateQueries({ queryKey: ['auth']}),
+        onSuccess: () => {
+            // ログアウト成功後、認証関連のクエリをクリア
+            qc.removeQueries({ queryKey: ['auth'] });
+            // ローカルストレージのトークンも削除（念のため）
+            localStorage.removeItem('auth_token');
+        },
     });
 }
 
