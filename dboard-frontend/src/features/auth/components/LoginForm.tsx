@@ -1,4 +1,4 @@
-import { Button, Card, Form, Input, Space, Typography } from "antd";
+import { Button, Card, Form, Input, Space, Typography, message } from "antd";
 import styled from "styled-components";
 import { useAuth } from "../hooks/useAuth";
 import { useLocation, useNavigate, Link } from "react-router-dom";
@@ -55,10 +55,11 @@ export const LoginForm = ( { onSuccess }: LoginFormProps) => {
         try {
             await login(data);
             const from = location.state?.from?.pathname || "/users";
-            navigate(from, { replace: true });
+            navigate(from);
+            message.success('ログインに成功しました');
             onSuccess?.();
-        } catch (error) {
-            console.error('Login failed:', error);
+        } catch {
+            message.error('ログインに失敗しました');
         }
     }
 
@@ -67,11 +68,11 @@ export const LoginForm = ( { onSuccess }: LoginFormProps) => {
             <LoginCard>
                 <Space direction="vertical" size="large" style={{ width: '100%' }}>
                     <Title level={2} style={{ textAlign: 'center', margin: 0 }}>
-                        ログイン
+                        Login
                     </Title>
                     <Form onFinish={handleSubmit(onSubmit)} layout="vertical">
                         <Form.Item
-                            label="メールアドレス"
+                            label="Email"
                             validateStatus={errors.email ? "error" : ""}
                             help={errors.email ? errors.email.message : ""}
                         >
@@ -81,15 +82,16 @@ export const LoginForm = ( { onSuccess }: LoginFormProps) => {
                                 render={({ field }) => (
                                     <Input
                                         {...field}
-                                        placeholder="メールアドレスを入力してください"
+                                        placeholder="Enter your email"
                                         type="email"
+                                        aria-label="Email"
                                     />
                                 )}
                             />
                         </Form.Item>
 
                         <Form.Item
-                            label="パスワード"
+                            label="Password"
                             validateStatus={errors.password ? "error" : ""}
                             help={errors.password ? errors.password.message : ""}
                         >
@@ -99,7 +101,8 @@ export const LoginForm = ( { onSuccess }: LoginFormProps) => {
                                 render={({ field }) => (
                                     <Input.Password
                                         {...field}
-                                        placeholder="パスワードを入力してください"
+                                        placeholder="Enter your password"
+                                        aria-label="Password"
                                     />
                                 )}
                             />
@@ -113,14 +116,14 @@ export const LoginForm = ( { onSuccess }: LoginFormProps) => {
                                 style={{ width: '100%' }}
                                 loading={isSubmitting}
                             >
-                                ログイン
+                                {isSubmitting ? 'Logging in...' : 'Login'}
                             </Button>
                         </Form.Item>
                         <RegisterLink>
-                            <span>アカウントをお持ちでない方は </span>
+                            <span>Don\'t have an account? </span>
                             <Link to="/register">
                                 <Button type="link" style={{ padding: 0 }}>
-                                    会員登録
+                                    Register
                                 </Button>
                             </Link>
                         </RegisterLink>

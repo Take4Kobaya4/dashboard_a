@@ -38,26 +38,53 @@ export default defineConfig({
     }
   },
   test: {
-    projects: [{
-      extends: true,
-      plugins: [
-      // The plugin will run tests for the stories defined in your Storybook config
-      // See options at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon#storybooktest
-      storybookTest({
-        configDir: path.join(dirname, '.storybook')
-      })],
-      test: {
-        name: 'storybook',
-        browser: {
-          enabled: true,
-          headless: true,
-          provider: 'playwright',
-          instances: [{
-            browser: 'chromium'
-          }]
+    projects: [
+      {
+        // Storybookテストプロジェクト
+        extends: true,
+        plugins: [
+          // Storybook設定ファイルで定義されたストーリーのテストを実行するプラグイン
+          // オプションについてはこちらを参照: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon#storybooktest
+          storybookTest({
+            configDir: path.join(dirname, '.storybook')
+          })
+        ],
+        test: {
+          name: 'storybook',
+          browser: {
+            enabled: true,
+            headless: true,
+            provider: 'playwright',
+            instances: [{
+              browser: 'chromium'
+            }]
+          },
+          setupFiles: ['.storybook/vitest.setup.ts'],
+          // 通常のユニットテストファイルがStorybookプロジェクトで実行されないように除外
+          exclude: ['**/*.{test,spec}.{js,jsx,ts,tsx}', 'node_modules', 'dist', '.idea', '.git', '.cache'],
+        }
+      },
+      {
+        // ユニット/コンポーネントテストプロジェクト (Vitest + React Testing Library)
+        test: {
+          environment: 'jsdom', // Reactコンポーネントのテストにはjsdom環境を使用
+          setupFiles: ['src/test/setup.ts'], // VitestとReact Testing Libraryのセットアップファイル
+          globals: true,
+          css: true,
+          restoreMocks: true,
+          clearMocks: true,
+          mockReset: true,
+          // ユニット/コンポーネントテストファイルのみを含める
+          include: ['src/**/*.{test,spec}.{js,jsx,ts,tsx}'],
+          // Storybookファイルがユニットテストプロジェクトで実行されないように除外
+          exclude: ['**/*.stories.{js,jsx,ts,tsx}', 'node_modules', 'dist', '.idea', '.git', '.cache'],
         },
-        setupFiles: ['.storybook/vitest.setup.ts']
+        resolve: {
+          alias: {
+            '@': path.resolve(__dirname, 'src'),
+          },
+        },
       }
-    }]
+    ]
   }
 });

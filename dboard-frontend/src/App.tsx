@@ -12,6 +12,7 @@ import { UserListPage } from './features/users/pages/UserListPage';
 import { UserDetailPage } from './features/users/pages/UserDetailPage';
 import { UserCreatePage } from './features/users/pages/UserCreatePage';
 import { UserEditPage } from './features/users/pages/UserEditPage';
+import { OnlineUsersPage } from './features/users/pages/OnlineUsersPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -59,7 +60,11 @@ function App() {
                     <UserEditPage />
                   </ProtectedRoute>
                 } />
-                <Route path='/online-users'/>
+                <Route path='/online-users' element={
+                  <ProtectedRoute>
+                    <OnlineUsersPage />
+                  </ProtectedRoute>
+                }/>
                 <Route path="/" element={
                   <ProtectedRoute>
                     <UserListPage />

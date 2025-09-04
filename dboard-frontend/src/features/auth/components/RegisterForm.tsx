@@ -1,4 +1,4 @@
-import { Button, Card, Form, Input, Typography } from "antd";
+import { Button, Card, Form, Input, Typography, message } from "antd";
 import styled from "styled-components";
 import { useAuth } from "../hooks/useAuth";
 import { Controller, useForm } from "react-hook-form";
@@ -6,6 +6,7 @@ import type { RegisterData } from "../types/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { registerSchema } from "../validation/authValidation";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const { Title, Text } = Typography;
 
@@ -31,6 +32,7 @@ interface RegisterFormProps {
 }
 export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
     const { register: registerUser } = useAuth();
+    const navigate = useNavigate();
     const {
         control,
         handleSubmit,
@@ -48,6 +50,8 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
     const onSubmit = async (data: RegisterData) => {
         try {
             await registerUser(data);
+            navigate('/users');
+            message.success('会員登録に成功しました');
             onSuccess?.();
         } catch {
             console.error("Registration failed");
@@ -58,11 +62,11 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
         <RegisterContainer>
             <RegisterCard>
                 <Title level={2} style={{ textAlign: "center", margin: 0 }}>
-                    新規登録
+                    Register
                 </Title>
                 <Form onFinish={handleSubmit(onSubmit)} layout="vertical">
                     <Form.Item
-                        label="名前"
+                        label="Name"
                         validateStatus={errors.name ? "error" : ""}
                         help={errors.name ? errors.name.message : ""}
                     >
@@ -72,7 +76,8 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
                             render={({ field}) => (
                                 <Input
                                     {...field}
-                                    placeholder="名前を入力してください"
+                                    placeholder="Enter your name"
+                                    aria-label="Name"
                                     size="large"
                                 />
                             )}
@@ -80,7 +85,7 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
                     </Form.Item>
 
                     <Form.Item
-                        label="メールアドレス"
+                        label="Email"
                         validateStatus={errors.email ? "error" : ""}
                         help={errors.email ? errors.email.message : ""}
                     >
@@ -90,8 +95,9 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
                             render={({ field }) => (
                                 <Input
                                     {...field}
-                                    placeholder="メールアドレスを入力してください"
+                                    placeholder="Enter your email"
                                     type="email"
+                                    aria-label="Email"
                                     size="large"
                                 />
                             )}
@@ -99,7 +105,7 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
                     </Form.Item>
 
                     <Form.Item
-                        label="パスワード"
+                        label="Password"
                         validateStatus={errors.password ? "error" : ""}
                         help={errors.password ? errors.password.message : ""}
                     >
@@ -109,7 +115,8 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
                             render={({ field }) => (
                                 <Input.Password
                                     {...field}
-                                    placeholder="パスワードを入力してください"
+                                    placeholder="Enter your password"
+                                    aria-label="Password"
                                     size="large"
                                 />
                             )}
@@ -117,7 +124,7 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
                     </Form.Item>
 
                     <Form.Item
-                        label="パスワード確認"
+                        label="Password Confirmation"
                         validateStatus={errors.password_confirmation ? "error" : ""}
                         help={errors.password_confirmation ? errors.password_confirmation.message : ""}
                     >
@@ -127,7 +134,8 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
                             render={({ field }) => (
                                 <Input.Password
                                     {...field}
-                                    placeholder="パスワードを再入力してください"
+                                    placeholder="Re-enter your password"
+                                    aria-label="Password Confirmation"
                                     size="large"
                                 />
                             )}
@@ -142,15 +150,15 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
                             style={{ width: '100%' }}
                             loading={isSubmitting}
                         >
-                            会員登録
+                            {isSubmitting ? 'Registering...' : 'Register'}
                         </Button>
                     </Form.Item>
 
                     <LoginLink>
-                        <Text>すでにアカウントをお持ちの方は</Text>
+                        <Text>Already have an account?</Text>
                         <Link to="/login">
                             <Button type="link" style={{ padding: 0 }}>
-                                ログイン
+                                Login
                             </Button>
                         </Link>
                     </LoginLink>
