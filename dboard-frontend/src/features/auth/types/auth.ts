@@ -1,4 +1,8 @@
+import type { User } from "../../users/types/user";
 
+export interface AuthUser extends User {
+    email_verified_at: string;
+}
 
 export interface LoginData {
     email: string;

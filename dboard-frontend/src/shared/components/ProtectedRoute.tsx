@@ -1,36 +1,24 @@
 import type { ReactNode } from "react";
-import styled from "styled-components";
-import { useAuth } from "../../features/users/hooks/useAuth";
+import { useAuth } from "../../features/auth/hooks/useAuth";
 import { Navigate, useLocation } from "react-router-dom";
-import { Spin } from "antd";
+import { ROUTES } from "../utils/constants";
 
-
-const LoadingContainer = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-`;
 
 interface ProtectedRouteProps {
     children: ReactNode;
 }
 
 export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
-    const { user, isLoading } = useAuth();
+    const { isAuthenticated, isLoading } = useAuth();
     const location = useLocation();
 
-    if(isLoading) {
-        return (
-            <LoadingContainer>
-                <Spin size="large" />
-            </LoadingContainer>
-        );
+    if (isLoading) {
+       return <div>Loading...</div>;
     }
 
-    // ユーザーでない時、ログイン画面へ遷移
-    if (!user) {
-        return <Navigate to="/login" state={{ from: location }} replace />;
-    } 
+    if (!isAuthenticated) {
+        return <Navigate to={ROUTES.LOGIN} state={{ from: location }} replace />;
+    }
+
     return <>{children}</>;
 }

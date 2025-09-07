@@ -1,11 +1,11 @@
-import axios from 'axios';
+import axios, { type AxiosError, type AxiosResponse } from 'axios';
+import type { ApiError } from '../types/common';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const BASE_API_URL = import.meta.env.VITE_API_BASE_URL;
 
-export const apiClient = axios.create({
-    baseURL: API_BASE_URL,
+export const api = axios.create({
+    baseURL: `${BASE_API_URL}/api`,
     withCredentials: true,
-    timeout: 10000, // タイムアウトを10秒に設定
     headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
@@ -13,14 +13,22 @@ export const apiClient = axios.create({
     },
 });
 
-// リクエストインターセプターの設定
-apiClient.interceptors.request.use(async (config) => {
-    // CSRF Cookieを取得
-    if (!document.cookie.includes('XSRF-TOKEN')) {
-        await axios.get(`http://localhost/sanctum/csrf-cookie`, {
-            withCredentials: true,
-        });
+export const initializeCSRF = async () => {
+    try {
+        await axios.get('/sanctum/csrf-cookie');
+    } catch (error) {
+        console.error('CSRF cookie initialization failed',error);
     }
-    return config;
-});
+}
 
+api.interceptors.response.use(
+    (response: AxiosResponse) => response,
+    (error: AxiosError) => {
+        const apiError: ApiError = {
+            message: error.response?.data?.message || error.message || 'An error occurred',
+            errors: error.response?.data?.errors,
+        };
+
+        return Promise.reject(apiError);
+    }
+);

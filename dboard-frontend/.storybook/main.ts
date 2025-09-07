@@ -1,4 +1,5 @@
 import type { StorybookConfig } from '@storybook/react-vite';
+import path from 'path';
 
 const config: StorybookConfig = {
   "stories": [
@@ -14,6 +15,20 @@ const config: StorybookConfig = {
   "framework": {
     "name": "@storybook/react-vite",
     "options": {}
+  },
+  "docs": {
+    "autodocs": "tag"
+  },
+  viteFinal: async (config) => {
+    if(config.resolve) {
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        '@': path.resolve(__dirname, '../src'),
+        '@/features': path.resolve(__dirname, '../src/features'),
+        '@/shared': path.resolve(__dirname, '../src/shared')
+      }
+    }
+    return config;
   }
 };
 export default config;

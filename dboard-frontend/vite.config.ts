@@ -18,7 +18,6 @@ export default defineConfig({
         target: 'http://localhost',
         // バックエンドのURL
         changeOrigin: true,
-        rewrite: path => path.replace(/^\/api/, '') // /apiを削除
       },
       '/sanctum/csrf-cookie': {
         target: 'http://localhost',
