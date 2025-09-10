@@ -24,6 +24,3 @@ export const updateUserSchema = z.object({
     message: 'パスワードとパスワード確認が一致しません',
     path: ['password_confirmation'],    
 });
-
-export type CreateUserFormData = z.infer<typeof createUserSchema>;
-export type UpdateUserFormData = z.infer<typeof updateUserSchema>;

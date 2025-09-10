@@ -1,117 +1,132 @@
-import { Button, Card, Form, Input, Typography } from "antd";
+import { Button, Card, Form, Input, Space, Typography } from "antd";
 import styled from "styled-components";
-import { useLogin } from "../hooks/useLogin";
+import { useAuth } from "../hooks/useAuth";
+import { useLocation, useNavigate, Link } from "react-router-dom";
 import { Controller, useForm } from "react-hook-form";
-import { loginSchema, type LoginFormData } from "../validation/authValidation";
+import type { LoginData } from "../types/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link } from "react-router-dom";
-import { ROUTES } from "../../../shared/utils/constants";
-
+import { loginSchema } from "../validation/authValidation";
 
 const { Title } = Typography;
 
+
 const LoginContainer = styled.div`
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-    min-height: 100vh;
-    background: linear-gradient(135deg, #667eea, 0%, #764ba2 100%);
+    justify-content: center;
+    height: 100vh;
+    background-color: #f0f2f5;
 `;
 
-const StyleCard = styled(Card)`
+const LoginCard = styled(Card)`
     width: 400px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 `;
 
-const FormTitle = styled(Title)`
-    text-align: center;
-    margin-bottom: 32px !important;
-`;
-
-const StyledButton = styled(Button)`
-    width: 100%;
-    height: 45px;
-`;
-
-const LinkContainer = styled.div`
-    text-align: center;
+const RegisterLink = styled.div`
     margin-top: 16px;
+    text-align: center;
 `;
 
-export const LoginForm = () => {
-    // useMutationのisLoadingプロパティは、TanStackQuery v5でisPendingに名称変更のため、修正
-    // lintエラーを修正するため、isPendingを使用します。
-    const { mutate: login, isPending } = useLogin();
+
+interface LoginFormProps {
+    onSuccess: () => void;
+}
+
+export const LoginForm = ( { onSuccess }: LoginFormProps) => {
+    const { login } = useAuth();
+    const navigate = useNavigate();
+    const location = useLocation();
+
     const {
         control,
         handleSubmit,
-        formState: { errors },
-    } = useForm<LoginFormData>({
+        formState: { errors, isSubmitting },
+    } = useForm<LoginData>({
         resolver: zodResolver(loginSchema),
         defaultValues: {
             email: "",
-            password: "",
-        },
+            password: ""
+        }
     });
 
-    const onSubmit = (data: LoginFormData) => {
-        login(data);
+    const onSubmit = async (data: LoginData) => {
+        try {
+            await login(data);
+            const from = location.state?.from?.pathname || "/users";
+            navigate(from, { replace: true });
+            onSuccess?.();
+        } catch (error) {
+            console.error('Login failed:', error);
+        }
     }
 
     return (
         <LoginContainer>
-            <StyleCard>
-                <FormTitle level={2}>ログイン</FormTitle>
-                <Form onFinish={handleSubmit(onSubmit)} layout="vertical">
-                    <Form.Item
-                        label="メールアドレス"
-                        validateStatus={errors.email ? 'error' : ''}
-                        help={errors.email?.message}
-                    >
-                        <Controller
-                            name="email"
-                            control={control}
-                            render={({ field }) => (
-                                <Input
-                                    {...field}
-                                    placeholder="メールアドレスを入力"
-                                    size="large"
-                                />
-                            )}
-                        />
-                    </Form.Item>
-
-                    <Form.Item>
-                        <Controller
-                            name="password"
-                            control={control}
-                            render={({ field }) => (
-                                <Input.Password
-                                    {...field}
-                                    placeholder="パスワードを入力"
-                                    size="large"
-                                />
-                            )}
-                        />
-                    </Form.Item>
-
-                    <Form.Item>
-                        <StyledButton
-                            type="primary"
-                            htmlType="submit"
-                            loading={isPending} // isLoadingをisPendingに変更（TanStackQuery）
-                            size="large"
+            <LoginCard>
+                <Space direction="vertical" size="large" style={{ width: '100%' }}>
+                    <Title level={2} style={{ textAlign: 'center', margin: 0 }}>
+                        ログイン
+                    </Title>
+                    <Form onFinish={handleSubmit(onSubmit)} layout="vertical">
+                        <Form.Item
+                            label="メールアドレス"
+                            validateStatus={errors.email ? "error" : ""}
+                            help={errors.email ? errors.email.message : ""}
                         >
-                            {isPending ? 'ログイン中...' : 'ログイン'} {/* isLoadingをisPendingに変更 */}
-                        </StyledButton>
-                    </Form.Item>
-                </Form>
+                            <Controller
+                                name="email"
+                                control={control}
+                                render={({ field }) => (
+                                    <Input
+                                        {...field}
+                                        placeholder="メールアドレスを入力してください"
+                                        type="email"
+                                    />
+                                )}
+                            />
+                        </Form.Item>
 
-                <LinkContainer>
-                    アカウントをお持ちでない方は
-                    <Link to={ROUTES.REGISTER}>新規会員登録</Link>
-                </LinkContainer>
-            </StyleCard>
+                        <Form.Item
+                            label="パスワード"
+                            validateStatus={errors.password ? "error" : ""}
+                            help={errors.password ? errors.password.message : ""}
+                        >
+                            <Controller
+                                name="password"
+                                control={control}
+                                render={({ field }) => (
+                                    <Input.Password
+                                        {...field}
+                                        placeholder="パスワードを入力してください"
+                                    />
+                                )}
+                            />
+                        </Form.Item>
+
+                        <Form.Item>
+                            <Button
+                                type="primary"
+                                htmlType="submit"
+                                size="large"
+                                style={{ width: '100%' }}
+                                loading={isSubmitting}
+                            >
+                                ログイン
+                            </Button>
+                        </Form.Item>
+                        <RegisterLink>
+                            <span>アカウントをお持ちでない方は </span>
+                            <Link to="/register">
+                                <Button type="link" style={{ padding: 0 }}>
+                                    会員登録
+                                </Button>
+                            </Link>
+                        </RegisterLink>
+                    </Form>
+                </Space>
+            </LoginCard>
         </LoginContainer>
     );
 }

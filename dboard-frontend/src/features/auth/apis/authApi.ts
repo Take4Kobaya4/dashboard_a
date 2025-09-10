@@ -1,36 +1,29 @@
-import { api, initializeCSRF } from "../../../shared/apis/apiClient";
-import type { ApiResponse } from "../../../shared/types/common";
-import { API_ENDPOINTS } from "../../../shared/utils/constants";
-import type { AuthUser, LoginData, RegisterData } from "../types/auth";
+import { apiClient } from "../../../shared/apis/apiClient";
+import type { User } from "../../users/types/user";
+import type { LoginData, RegisterData } from "../types/auth";
 
 
 export const authApi = {
-    async login(data: LoginData): Promise<AuthUser> {
-        await initializeCSRF();
-        const res = await api.post<ApiResponse<AuthUser>>(
-            API_ENDPOINTS.AUTH.LOGIN,
-            data
-        );
-        return res.data.data;
+    // ログイン
+    login: async (data: LoginData): Promise<User> => {
+        const response = await apiClient.post('/login', data);
+        return response.data;
     },
 
-    async register(data: RegisterData): Promise<AuthUser> {
-        await initializeCSRF();
-        const res = await api.post<ApiResponse<AuthUser>>(
-            API_ENDPOINTS.AUTH.REGISTER,
-            data
-        );
-        return res.data.data;
+    // 会員登録
+    register: async (data: RegisterData): Promise<User> => {
+        const response = await apiClient.post('/register', data);
+        return response.data;
     },
 
-    async logout(): Promise<void> {
-        await api.post(API_ENDPOINTS.AUTH.LOGOUT);
+    // ログアウト
+    logout: async (): Promise<void> => {
+        await apiClient.post('/logout');
     },
 
-    async getMe(): Promise<AuthUser> {
-        const res = await api.get<ApiResponse<AuthUser>>(
-            API_ENDPOINTS.AUTH.ME
-        );
-        return res.data.data;
-    }
+    // ユーザー情報の取得
+    getMe: async (): Promise<User> => {
+        const response = await apiClient.get('/me');
+        return response.data;
+    },
 }

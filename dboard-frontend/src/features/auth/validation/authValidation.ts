@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const loginSchema = z.object({
-    email: z.string().min(1, 'メールアドレスは必須です').email('有効なメールアドレスを入力してください'),
+    email: z.string().min(1, 'メールアドレスは必須です'),
     password: z.string().min(1, 'パスワードは必須です'),
 });
 
@@ -14,6 +14,3 @@ export const registerSchema = z.object({
     message: 'パスワードとパスワード確認が一致しません',
     path: ['password_confirmation'],
 });
-
-export type LoginFormData = z.infer<typeof loginSchema>;
-export type RegisterFormData = z.infer<typeof registerSchema>;

@@ -22,10 +22,3 @@ export interface UpdateUserData {
     password_confirmation?: string;
 }
 
-export interface UserFilters {
-    search?: string;
-    is_online?: boolean;
-    page?: number;
-    per_page?: number;
-}
-
