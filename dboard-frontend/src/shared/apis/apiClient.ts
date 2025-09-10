@@ -15,7 +15,7 @@ export const api = axios.create({
 
 export const initializeCSRF = async () => {
     try {
-        await axios.get('/sanctum/csrf-cookie');
+        await axios.get('http://localhost/sanctum/csrf-cookie');
     } catch (error) {
         console.error('CSRF cookie initialization failed',error);
     }

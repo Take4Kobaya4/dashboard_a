@@ -3,7 +3,6 @@ import type { ApiResponse } from "../../../shared/types/common";
 import { API_ENDPOINTS } from "../../../shared/utils/constants";
 import type { AuthUser, LoginData, RegisterData } from "../types/auth";
 
-
 export const authApi = {
     async login(data: LoginData): Promise<AuthUser> {
         await initializeCSRF();

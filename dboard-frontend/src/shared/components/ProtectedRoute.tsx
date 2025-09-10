@@ -9,16 +9,16 @@ interface ProtectedRouteProps {
 }
 
 export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
-    const { isAuthenticated, isLoading } = useAuth();
+    const { user, isLoading } = useAuth();
     const location = useLocation();
 
     if (isLoading) {
        return <div>Loading...</div>;
     }
 
-    if (!isAuthenticated) {
+    if (!user) {
         return <Navigate to={ROUTES.LOGIN} state={{ from: location }} replace />;
     }
-
+    console.log(user);
     return <>{children}</>;
 }

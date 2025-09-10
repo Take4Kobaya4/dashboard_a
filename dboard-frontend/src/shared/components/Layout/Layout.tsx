@@ -2,6 +2,8 @@
 import { Layout as AntLayout } from 'antd';
 import type { ReactNode } from 'react';
 import styled from 'styled-components';
+import { Header } from './ Header';
+import { Sidebar } from './Sidebar';
 
 
 const { Content } = AntLayout;
@@ -22,9 +24,9 @@ const StyledContent = styled(Content)`
 export const Layout = ({ children }: LayoutProps) => {
     return (
         <StyledLayout>
-            
+            <Sidebar />
             <AntLayout>
-                
+                <Header />
                 <StyledContent>{children}</StyledContent>
             </AntLayout>
         </StyledLayout>

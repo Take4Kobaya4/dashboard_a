@@ -15,7 +15,6 @@ const LoginContainer = styled.div`
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background: linear-gradient(135deg, #667eea, 0%, #764ba2 100%);
 `;
 
 const StyleCard = styled(Card)`
@@ -58,10 +57,11 @@ export const LoginForm = () => {
         login(data);
     }
 
+    
     return (
         <LoginContainer>
             <StyleCard>
-                <FormTitle level={2}>ログイン</FormTitle>
+                <FormTitle level={2}>Login</FormTitle>
                 <Form onFinish={handleSubmit(onSubmit)} layout="vertical">
                     <Form.Item
                         label="メールアドレス"

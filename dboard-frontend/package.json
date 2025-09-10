@@ -22,6 +22,7 @@
     "test:playwright:report": "playwright show-report"
   },
   "dependencies": {
+    "@ant-design/v5-patch-for-react-19": "^1.0.3",
     "@hookform/resolvers": "^5.2.1",
     "@tanstack/react-query": "^5.85.3",
     "antd": "^5.27.0",
