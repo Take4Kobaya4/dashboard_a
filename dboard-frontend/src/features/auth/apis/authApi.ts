@@ -1,12 +1,13 @@
 import { apiClient } from "../../../shared/apis/apiClient";
 import { API_ENDPOINTS } from "../../../shared/constants/navigation";
 import type { ApiResponse } from "../../../shared/types/common";
-import type { User } from "../../users/types/user";
+import type { AuthUser } from "../types/auth";
+
 
 export const authApi = {
     // ログイン
-    login: async(email: string, password: string):Promise<User> => {
-        const response = await apiClient.post<ApiResponse<User>>(
+    login: async(email: string, password: string):Promise<AuthUser> => {
+        const response = await apiClient.post<ApiResponse<AuthUser>>(
             API_ENDPOINTS.AUTH.LOGIN,
             { email, password }
         );
@@ -19,8 +20,8 @@ export const authApi = {
         email: string,
         password: string,
         password_confirmation: string
-    ) :Promise<User> => {
-        const response = await apiClient.post<ApiResponse<User>>(
+    ) :Promise<AuthUser> => {
+        const response = await apiClient.post<ApiResponse<AuthUser>>(
             API_ENDPOINTS.AUTH.REGISTER,
             { name, email, password, password_confirmation }
         );
@@ -33,8 +34,8 @@ export const authApi = {
     },
 
     // ログインユーザー情報取得
-    getCurrentUser: async(): Promise<User> => {
-        const response = await apiClient.get<ApiResponse<User>>(
+    getCurrentUser: async(): Promise<AuthUser> => {
+        const response = await apiClient.get<ApiResponse<AuthUser>>(
             API_ENDPOINTS.AUTH.GET_CURRENT_USER
         );
         return response.data.data;

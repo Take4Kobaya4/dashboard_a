@@ -1,44 +1,34 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom"
-import type { User } from "../../users/types/user";
-import { authApi } from "../apis/authApi";
+import { useCallback } from "react";
+import { useGetCurrentUser } from "./useGetCurrentUser";
+import type { AuthType } from "../types/auth";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const useAuth = () => {
-    const navigate = useNavigate();
-    const [user, setUser] = useState<User | null>(null);
-    const [isLoading, setIsLoading] = useState(true);
-    // useGetCurrentUserフックからのデータは、このフックのuseState変数と競合しているため削除します。
+    const queryClient = useQueryClient();
+    const { data: authData } = useGetCurrentUser();
+    const user = authData; // `authData`自体がユーザーオブジェクトであると仮定します。
     // 代わりに、useEffect内でauthApi.getCurrentUser()を呼び出して認証状態を初期化します。
-    const isAuth = !!user; // 認証状態はuseStateの`user`から導出します。
+    const isAuth = !!authData; // 認証状態は`authData`が存在するかどうかで判断します。
 
-    useEffect(() => {
-        const checkAuth = async() => {
-            try {
-                const currentUser = await authApi.getCurrentUser();
-                setUser(currentUser);
-            } catch (error) {
-                console.error('認証されていません', error);
-            } finally {
-                setIsLoading(false);
-            }
-        }
-        checkAuth();
-    }, []);
+    // 認証状態の更新(ログイン)
+    const login = useCallback(
+        (user: AuthType, token: string) => {
+            queryClient.setQueryData(['auth'], { user, token });
+        },
+        [queryClient]
+    );
 
-    const login = (user: User) => {
-        setUser(user);
-    }
-
-    const logout = () => {
-        setUser(null);
-        navigate('/login');
-    }
+    // 認証状態の解除(ログアウト)
+    const logout = useCallback(() => {
+        queryClient.setQueryData(['auth'], null);
+        queryClient.invalidateQueries({ queryKey: ['auth'] });
+        queryClient.invalidateQueries({ queryKey: ['users'] });
+    }, [queryClient]);
 
     return {
         user,
         isAuth,
         login,
         logout,
-        isLoading
     };
 }
