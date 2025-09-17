@@ -6,19 +6,4 @@ export interface User {
     is_online: boolean;
 }
 
-// ユーザー作成の型
-export interface CreateUserData {
-    name: string;
-    email: string;
-    password: string;
-    password_confirmation: string;
-}
-
-// ユーザー更新の型
-export interface UpdateUserData {
-    name?: string;
-    email?: string;
-    password?: string;
-    password_confirmation?: string;
-}
 

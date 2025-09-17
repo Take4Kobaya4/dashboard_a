@@ -1,29 +1,42 @@
 import { apiClient } from "../../../shared/apis/apiClient";
+import { API_ENDPOINTS } from "../../../shared/constants/navigation";
+import type { ApiResponse } from "../../../shared/types/common";
 import type { User } from "../../users/types/user";
-import type { LoginData, RegisterData } from "../types/auth";
-
 
 export const authApi = {
     // ログイン
-    login: async (data: LoginData): Promise<User> => {
-        const response = await apiClient.post('/login', data);
-        return response.data;
+    login: async(email: string, password: string):Promise<User> => {
+        const response = await apiClient.post<ApiResponse<User>>(
+            API_ENDPOINTS.AUTH.LOGIN,
+            { email, password }
+        );
+        return response.data.data;
     },
 
     // 会員登録
-    register: async (data: RegisterData): Promise<User> => {
-        const response = await apiClient.post('/register', data);
-        return response.data;
+    register: async(
+        name: string,
+        email: string,
+        password: string,
+        password_confirmation: string
+    ) :Promise<User> => {
+        const response = await apiClient.post<ApiResponse<User>>(
+            API_ENDPOINTS.AUTH.REGISTER,
+            { name, email, password, password_confirmation }
+        );
+        return response.data.data;
     },
 
     // ログアウト
-    logout: async (): Promise<void> => {
-        await apiClient.post('/logout');
+    logout: async(): Promise<void> => {
+        await apiClient.post(API_ENDPOINTS.AUTH.LOGOUT);
     },
 
-    // ユーザー情報の取得
-    getMe: async (): Promise<User> => {
-        const response = await apiClient.get('/me');
-        return response.data;
-    },
+    // ログインユーザー情報取得
+    getCurrentUser: async(): Promise<User> => {
+        const response = await apiClient.get<ApiResponse<User>>(
+            API_ENDPOINTS.AUTH.GET_CURRENT_USER
+        );
+        return response.data.data;
+    }
 }
