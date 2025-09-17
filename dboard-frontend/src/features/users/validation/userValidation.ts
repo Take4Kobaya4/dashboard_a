@@ -10,6 +10,8 @@ export const createUserSchema = z.object({
     path: ['password_confirmation'],
 });
 
+export type CreateUserFormData = z.infer<typeof createUserSchema>;
+
 export const updateUserSchema = z.object({
     name: z.string().min(1, '名前を入力してください'),
     email: z.string().min(1, 'メールアドレスを入力してください').email('有効なメールアドレスを入力してください'),
@@ -24,3 +26,5 @@ export const updateUserSchema = z.object({
     message: 'パスワードとパスワード確認が一致しません',
     path: ['password_confirmation'],    
 });
+
+export type UpdateUserFormData = z.infer<typeof createUserSchema>;

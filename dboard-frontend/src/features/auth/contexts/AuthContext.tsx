@@ -1,57 +1,32 @@
 import { createContext, type ReactNode } from "react";
 import type { User } from "../../users/types/user";
-import type { LoginData, RegisterData } from "../types/auth";
-import { useFetchMe, useLogin, useLogout, useRegister } from "../hooks/authHooks";
-
-
+import { useAuth } from "../hooks/useContext";
 
 interface AuthContextType {
     user: User | null;
-    isLoading: boolean;
-    login: (data: LoginData) => Promise<void>;
-    register: (data: RegisterData) => Promise<void>;
+    isAuth: boolean;
+    login: (email: string, password: string) => Promise<void>;
     logout: () => Promise<void>;
 }
+
+const AuthContext = createContext<AuthContextType>({
+    user: null,
+    isAuth: false,
+    login: async() => {},
+    logout: async() => {}
+});
+
+export { AuthContext };
 
 interface AuthProviderProps {
     children: ReactNode;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-export { AuthContext };
-
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-    const { data: user, isLoading, refetch } = useFetchMe();
-    const loginMutation = useLogin();
-    const logoutMutation = useLogout();
-    const registerMutation = useRegister();
-
-    const login = async (data: LoginData) => {
-        await loginMutation.mutateAsync(data);
-        await refetch();
-    }
-
-    const register = async (data: RegisterData) => {
-        await registerMutation.mutateAsync(data);
-        await refetch();
-    }
-
-    const logout = async () => {
-        await logoutMutation.mutateAsync();
-        await refetch();
-    }
-
-    const value: AuthContextType = {
-        user: user ?? null,
-        isLoading,
-        login,
-        register,
-        logout
-    };
+    const { user, isAuth, login, logout } = useAuth();
 
     return (
-        <AuthContext.Provider value={value}>
+        <AuthContext.Provider value={{ user, isAuth, login, logout }}>
             {children}
         </AuthContext.Provider>
     );

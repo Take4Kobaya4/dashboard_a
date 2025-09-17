@@ -17,7 +17,7 @@ export const apiClient = axios.create({
 apiClient.interceptors.request.use(async (config) => {
     // CSRF Cookieを取得
     if (!document.cookie.includes('XSRF-TOKEN')) {
-        await axios.get(`http://localhost/sanctum/csrf-cookie`, {
+        await axios.get(`${API_BASE_URL.replace('/api', '')}/sanctum/csrf-cookie`, {
             withCredentials: true,
         });
     }
