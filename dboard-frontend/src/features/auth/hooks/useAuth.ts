@@ -5,10 +5,9 @@ import { useQueryClient } from "@tanstack/react-query";
 
 export const useAuth = () => {
     const queryClient = useQueryClient();
-    const { data: authData } = useGetCurrentUser();
-    const user = authData; // `authData`自体がユーザーオブジェクトであると仮定します。
-    // 代わりに、useEffect内でauthApi.getCurrentUser()を呼び出して認証状態を初期化します。
-    const isAuth = !!authData; // 認証状態は`authData`が存在するかどうかで判断します。
+    const { data: user } = useGetCurrentUser();
+
+    const isAuth = !!user;
 
     // 認証状態の更新(ログイン)
     const login = useCallback(
@@ -20,7 +19,9 @@ export const useAuth = () => {
 
     // 認証状態の解除(ログアウト)
     const logout = useCallback(() => {
+        // authのクエリキーを削除
         queryClient.setQueryData(['auth'], null);
+        // usersとauthのクエリキーを無効化
         queryClient.invalidateQueries({ queryKey: ['auth'] });
         queryClient.invalidateQueries({ queryKey: ['users'] });
     }, [queryClient]);
