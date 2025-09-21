@@ -61,8 +61,9 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         $request->user()->tokens()->delete();
-        // ログアウトの状態更新(is_onlineをfalseへ更新)
-        $request->user()->updateLogoutStatus();
+        $user = $request->user();
+        $user->updateLogoutStatus();
+        $user->save();
         return response()->json([
             'message' => 'User logged out successfully'
         ]);

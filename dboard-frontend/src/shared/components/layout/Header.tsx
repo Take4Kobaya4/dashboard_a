@@ -33,9 +33,9 @@ const UserInfo = styled(Box)`
 `;
 
 export const Header = () => {
-    const { logout } = useAuth();
+    const { user, logout } = useAuth();
     const navigate = useNavigate();
-
+    
     const handleLogout = async () => {
         await logout();
         navigate('/login');
@@ -56,9 +56,18 @@ export const Header = () => {
 
                     <UserSection>
                         <UserInfo>
-                            <Button variant="contained" onClick={handleLogout}>
-                                ログアウト
-                            </Button>
+                            {user && (
+                                <>
+                                    <Typography variant="body2">{user.name}さん</Typography>
+                                    <Button
+                                        variant="contained"
+                                        color="secondary"
+                                        onClick={handleLogout}
+                                    >
+                                        ログアウト
+                                    </Button>
+                                </>
+                            )}
                         </UserInfo>
                     </UserSection>
             </StyledToolbar>

@@ -14,9 +14,11 @@ export const apiClient = axios.create({
 });
 
 // リクエストインターセプターの設定
-apiClient.interceptors.request.use(async (config) => {
+apiClient.interceptors.request.use((config) => {
     const token = localStorage.getItem('token');
     if (token) {
+        // headersオブジェクトが存在することを保証する
+        config.headers = config.headers ?? {};
         config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
@@ -48,4 +50,3 @@ export const removeAxiosAuthentication = () => {
     localStorage.removeItem('token');
     delete apiClient.defaults.headers.Authorization;
 };
-

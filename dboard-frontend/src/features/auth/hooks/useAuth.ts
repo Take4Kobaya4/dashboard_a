@@ -1,34 +1,38 @@
-import { useQueryClient } from "@tanstack/react-query"
-import { useGetCurrentUser } from "./useGetCurrentUser";
+import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { useCallback } from "react";
 import { removeAxiosAuthentication, setAxiosAuthentication } from "../../../shared/apis/apiClient";
-import type { AuthResponse } from "../types/auth";
-
+import type { AuthResponse, AuthUser } from "../types/auth";
+import { authApi } from "../apis/authApi";
 
 export const useAuth = () => {
     const queryClient = useQueryClient();
-    const { data: authData, isLoading } = useGetCurrentUser();
+    const token = localStorage.getItem('token');
 
-    const user = authData || null;
-    // プロパティ 'user' は型 'AuthUser' に存在しないため、authData自体で認証状態を判断
-    const isAuth = !!authData;
+    // useGetCurrentUserのロジックをここに統合
+    const { data: user, isLoading } = useQuery<AuthUser | null>({
+        queryKey: ['auth'],
+        queryFn: authApi.getCurrentUser,
+        // トークンが存在する場合のみ、このクエリを有効にする
+        enabled: !!token,
+        staleTime: 1000 * 60 * 30, // 30分間はキャッシュを新鮮なものとして扱う
+        retry: false, // 認証エラー(401など)でリトライしない
+    });
+
+    const isAuth = !!user;
 
     const login = useCallback(
-        (user: AuthResponse, token: string) => {
-            // ローカルストレージにトークンを保存
-            setAxiosAuthentication(token);
-            // クエリキャッシュにユーザー情報を保存
-            queryClient.setQueryData(['auth'], { user, token });
+        (authResponse: AuthResponse) => {
+            setAxiosAuthentication(authResponse.token);
+            queryClient.setQueryData(['auth'], authResponse.user);
         }, [queryClient]
     );
-
-    const logout = useCallback(() => {
+    
+    const logout = useCallback(async () => {
+        await authApi.logout();
         removeAxiosAuthentication();
-        // クエリキャッシュからユーザー情報を削除
         queryClient.setQueryData(['auth'], null);
-        // クエリキャッシュを無効化
-        queryClient.invalidateQueries({ queryKey: ['auth'] });
-        queryClient.invalidateQueries({ queryKey: ['users'] });
+        // ログアウト時に他の関連キャッシュもクリアする場合
+        // queryClient.removeQueries();
     }, [queryClient]);
 
     return { user, isAuth, isLoading, login, logout };
