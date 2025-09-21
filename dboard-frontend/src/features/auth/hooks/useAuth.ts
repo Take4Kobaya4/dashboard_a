@@ -1,35 +1,35 @@
-import { useCallback } from "react";
+import { useQueryClient } from "@tanstack/react-query"
 import { useGetCurrentUser } from "./useGetCurrentUser";
-import type { AuthType } from "../types/auth";
-import { useQueryClient } from "@tanstack/react-query";
+import { useCallback } from "react";
+import { removeAxiosAuthentication, setAxiosAuthentication } from "../../../shared/apis/apiClient";
+import type { AuthResponse } from "../types/auth";
+
 
 export const useAuth = () => {
     const queryClient = useQueryClient();
-    const { data: user } = useGetCurrentUser();
+    const { data: authData, isLoading } = useGetCurrentUser();
 
-    const isAuth = !!user;
+    const user = authData || null;
+    // プロパティ 'user' は型 'AuthUser' に存在しないため、authData自体で認証状態を判断
+    const isAuth = !!authData;
 
-    // 認証状態の更新(ログイン)
     const login = useCallback(
-        (user: AuthType, token: string) => {
+        (user: AuthResponse, token: string) => {
+            // ローカルストレージにトークンを保存
+            setAxiosAuthentication(token);
+            // クエリキャッシュにユーザー情報を保存
             queryClient.setQueryData(['auth'], { user, token });
-        },
-        [queryClient]
+        }, [queryClient]
     );
 
-    // 認証状態の解除(ログアウト)
     const logout = useCallback(() => {
-        // authのクエリキーを削除
+        removeAxiosAuthentication();
+        // クエリキャッシュからユーザー情報を削除
         queryClient.setQueryData(['auth'], null);
-        // usersとauthのクエリキーを無効化
+        // クエリキャッシュを無効化
         queryClient.invalidateQueries({ queryKey: ['auth'] });
         queryClient.invalidateQueries({ queryKey: ['users'] });
     }, [queryClient]);
 
-    return {
-        user,
-        isAuth,
-        login,
-        logout,
-    };
+    return { user, isAuth, isLoading, login, logout };
 }

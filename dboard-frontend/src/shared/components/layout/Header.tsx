@@ -33,7 +33,7 @@ const UserInfo = styled(Box)`
 `;
 
 export const Header = () => {
-    const { isAuth, logout } = useAuth();
+    const { logout } = useAuth();
     const navigate = useNavigate();
 
     const handleLogout = async () => {
@@ -44,7 +44,6 @@ export const Header = () => {
     const handleLogoClick = () => {
         navigate('/users');
     };
-    console.log(isAuth);
 
     return (
         <StyledAppBar position="static">

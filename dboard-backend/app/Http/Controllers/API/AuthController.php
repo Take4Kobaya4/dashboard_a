@@ -44,7 +44,7 @@ class AuthController extends Controller
         // パスワードチェックが正しくないまたはユーザーが見つからない場合、エラーを返す
         if (!$user || !Hash::check($request->password, $user->password)) {
             return response()->json([
-                'message' => 'The provided credentials are incorrect.'
+                'message' => 'Invalid credentials'
             ], 401);
         }
 
@@ -68,7 +68,7 @@ class AuthController extends Controller
         ]);
     }
 
-    public function me(Request $request)
+    public function user(Request $request)
     {
         return response()->json([
             'user' => $request->user(),

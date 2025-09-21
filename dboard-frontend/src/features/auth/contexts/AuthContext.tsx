@@ -1,10 +1,12 @@
 import { createContext, type ReactNode } from "react";
-import type { User } from "../../users/types/user";
+
 import { useAuth } from "../hooks/useContext";
+import type { AuthUser } from "../types/auth";
 
 interface AuthContextType {
-    user: User | null;
+    user: AuthUser | null;
     isAuth: boolean;
+    isLoading: boolean;
     login: (email: string, password: string) => Promise<void>;
     logout: () => Promise<void>;
 }
@@ -12,6 +14,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType>({
     user: null,
     isAuth: false,
+    isLoading: false,
     login: async() => {},
     logout: async() => {}
 });
@@ -26,7 +29,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     const { user, isAuth, login, logout } = useAuth();
     
     return (
-        <AuthContext.Provider value={{ user, isAuth, login, logout }}>
+        <AuthContext.Provider value={{ user, isAuth, login, logout, isLoading: false }}>
             {children}
         </AuthContext.Provider>
     );

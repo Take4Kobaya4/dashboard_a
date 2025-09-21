@@ -7,7 +7,7 @@ export const useLoginMutation = () => {
 
     return useMutation({
         mutationFn: ({ email, password }: { email: string, password: string }) => 
-            authApi.login(email, password),
+            authApi.login({ email, password }),
         onSuccess: (data) => {
             queryClient.setQueryData(['auth'], data);
             queryClient.invalidateQueries({ queryKey: ['auth'] });

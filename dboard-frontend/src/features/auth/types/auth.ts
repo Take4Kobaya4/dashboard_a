@@ -1,13 +1,11 @@
-export interface AuthUser {
-    id: number;
-    name: string;
-    email: string;
-    last_login_at?: string;
-    is_online: boolean;
-}
+import type { User } from "../../users/types/user";
 
-
-export type AuthType = {
-    user: AuthUser;
+export interface AuthUser extends User {
     token?: string;
 }
+
+export interface AuthResponse {
+    user: AuthUser;
+    token: string;
+}
+

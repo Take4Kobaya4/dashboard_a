@@ -46,8 +46,15 @@ export const LoginForm = () => {
     });
 
     const onSubmit = async (data: { email: string; password: string }) => {
-        loginMutation.mutateAsync(data);
-        navigate('/users');
+        try {
+            // loginMutation.mutateAsync はPromiseを返すため、awaitで完了を待ちます。
+            // これにより、ログインAPIの呼び出しが成功した後に画面遷移が実行されます。
+            await loginMutation.mutateAsync(data);
+            navigate('/users');
+        } catch (error) {
+            console.error("Login failed:", error);
+            // TODO: ユーザーにエラーメッセージを表示する (例: アラート、トースト通知)
+        }
     };
 
     return(
