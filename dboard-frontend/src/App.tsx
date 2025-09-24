@@ -19,8 +19,9 @@ const queryClient = new QueryClient({
   }
 });
 
-function App() {
 
+
+function App() {
 
   return (
     <ConfigProvider locale={jaJP}>

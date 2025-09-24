@@ -6,4 +6,17 @@ export interface User {
     is_online: boolean;
 }
 
+export interface CreateUserData {
+    name: string;
+    email: string;
+    password: string;
+    password_confirmation: string;
+}
+
+export interface UpdateUserData {
+    name: string;
+    email: string;
+    password?: string;
+    password_confirmation?: string;
+}
 
