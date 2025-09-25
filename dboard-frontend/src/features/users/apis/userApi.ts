@@ -17,7 +17,7 @@ export const userApi = {
         const response = await apiClient.get(
             API_ENDPOINTS.USERS.SHOW(id)
         );
-        return response.data.data;
+        return response.data.user;
     },
 
     // ユーザー作成

@@ -22,7 +22,6 @@ export const UserDetailPage = () => {
 
     return (
         <UserDetail
-            userId={userId}
             onEdit={handleEdit}
             onBack={handleBack}
         />

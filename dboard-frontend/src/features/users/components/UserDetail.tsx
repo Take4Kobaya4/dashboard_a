@@ -24,17 +24,15 @@ const IconWrapper = styled(Box)`
 `;
 
 interface UserDetailProps {
-    userId: number;
     onEdit?: () => void;
     onBack?: () => void;
 }
 
 export const UserDetail = ({
-    userId,
     onEdit,
     onBack
 }: UserDetailProps) => {
-    const { data: user, isLoading, error } = useUserQuery(userId);
+    const { data: user, isLoading, error } = useUserQuery(1);
 
     if (isLoading) {
         return <div>Loading...</div>;
@@ -47,7 +45,7 @@ export const UserDetail = ({
             </Alert>
         );
     }
-    console.log(user);
+    
     return (
         <DetailContainer elevation={3}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
@@ -71,7 +69,7 @@ export const UserDetail = ({
             <Divider sx={{ mb: 3 }} />
 
             <Grid container spacing={3}>
-                <Grid item xs={12} md={6} component="div">
+                <Grid xs={12} md={6} >
                     <InfoRow>
                         <IconWrapper>
                             <Person />
@@ -97,7 +95,7 @@ export const UserDetail = ({
                     </InfoRow>
                 </Grid>
 
-                <Grid item xs={12} md={6} component="div">
+                <Grid xs={12} md={6} >
                     <InfoRow>
                         <IconWrapper>
                             <Circle />
