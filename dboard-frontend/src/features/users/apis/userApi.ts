@@ -1,15 +1,15 @@
-import { type PaginatedResponse } from "../../../shared/types/common";
+
 import { apiClient } from "../../../shared/apis/apiClient";
 import { API_ENDPOINTS } from "../../../shared/constants/navigation";
 import type { CreateUserData, UpdateUserData, User } from "../types/user";
 
 export const userApi = {
     // ユーザー一覧を取得
-    getUsers: async (): Promise<PaginatedResponse<User>> => {
+    getUsers: async (): Promise<User[]> => {
         const response = await apiClient.get(
             `${API_ENDPOINTS.USERS.LIST}`
         );
-        return response.data;
+        return response.data.data;
     },
 
     // ユーザー詳細を取得
@@ -26,7 +26,7 @@ export const userApi = {
             API_ENDPOINTS.USERS.CREATE,
             data
         );
-        return response.data;
+        return response.data.data;
     },
 
     // ユーザー更新(編集)
@@ -35,7 +35,7 @@ export const userApi = {
             API_ENDPOINTS.USERS.UPDATE(id),
             data
         );
-        return response.data;
+        return response.data.data;
     },
 
     // ユーザー削除
@@ -48,7 +48,7 @@ export const userApi = {
         const response = await apiClient.get(
             API_ENDPOINTS.USERS.ONLINE
         );
-        return response.data;
+        return response.data.data;
     },
 
     // 複数ユーザーを一括削除

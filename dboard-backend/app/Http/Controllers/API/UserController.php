@@ -15,14 +15,11 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $query = User::search();
+        $query = User::search($request->search);
 
         $users = $query->orderBy('created_at', 'desc')->paginate(User::PER_PAGE);
 
-        return response()->json([
-            'message' => 'Users fetched successfully',
-            'success' => true,
-        ]);
+        return response()->json($users);
     }
 
     /**

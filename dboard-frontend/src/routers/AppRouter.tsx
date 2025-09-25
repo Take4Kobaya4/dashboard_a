@@ -4,6 +4,7 @@ import { RegisterPage } from "../features/auth/pages/RegisterPage";
 import { Layout } from "../shared/components/layout/Layout";
 import { ProtectedRoute } from "./ProtectedRoute";
 import { UserListPage } from "../features/users/pages/UserListPage";
+import { UserDetailPage } from "../features/users/pages/UserDetailPage";
 
 export const AppRouter = () => {
 
@@ -27,6 +28,14 @@ export const AppRouter = () => {
                         </Layout>
                     </ProtectedRoute>
                 } />
+                <Route path="/users/:id" element={
+                    <ProtectedRoute>
+                        <Layout>
+                            <UserDetailPage />
+                        </Layout>
+                    </ProtectedRoute>
+                }
+                />
             </Routes>
         </BrowserRouter>
     );
