@@ -53,8 +53,13 @@ export const RegisterForm = () => {
         password: string;
         password_confirmation: string;
     }) => {
-        registerMutation.mutateAsync(data);
-        navigate('/login');
+        try {
+            await registerMutation.mutateAsync(data);
+            navigate('/login');
+        } catch (error) {
+            console.error("Registration failed:", error);
+            // TODO: ユーザーにエラーメッセージを表示する
+        }
     };
 
     return (

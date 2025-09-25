@@ -1,7 +1,13 @@
-import type { User } from "../../users/types/user"
+import type { User } from "../../users/types/user";
 
-
-export type AuthType = {
-    user: User;
+export interface AuthUser extends User {
     token?: string;
+    last_login_at?: string;
+    is_online: boolean;
 }
+
+export interface AuthResponse {
+    user: AuthUser;
+    token: string;
+}
+

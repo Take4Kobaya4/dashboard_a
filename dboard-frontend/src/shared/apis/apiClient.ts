@@ -1,6 +1,6 @@
-import axios from 'axios';
+import axios, { type AxiosResponse } from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost/api';
 
 export const apiClient = axios.create({
     baseURL: API_BASE_URL,
@@ -14,13 +14,39 @@ export const apiClient = axios.create({
 });
 
 // リクエストインターセプターの設定
-apiClient.interceptors.request.use(async (config) => {
-    // CSRF Cookieを取得
-    if (!document.cookie.includes('XSRF-TOKEN')) {
-        await axios.get(`${API_BASE_URL.replace('/api', '')}/sanctum/csrf-cookie`, {
-            withCredentials: true,
-        });
+apiClient.interceptors.request.use((config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+        // headersオブジェクトが存在することを保証する
+        config.headers = config.headers ?? {};
+        config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
-});
+},
+(error) => {
+        return Promise.reject(error);
+    }
+);
 
+apiClient.interceptors.response.use(
+    (response: AxiosResponse) => {
+        return response;
+    },
+    (error) => {
+        if (error.response?.status === 401){
+            localStorage.removeItem('token');
+            window.location.href = '/login';
+        }
+        return Promise.reject(error);
+    }
+);
+
+export const setAxiosAuthentication = (token: string) => {
+    localStorage.setItem('token', token);
+    apiClient.defaults.headers.Authorization = `Bearer ${token}`;
+};
+
+export const removeAxiosAuthentication = () => {
+    localStorage.removeItem('token');
+    delete apiClient.defaults.headers.Authorization;
+};

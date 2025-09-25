@@ -58,6 +58,9 @@ export default defineConfig({
         },
         setupFiles: ['.storybook/vitest.setup.ts']
       }
-    }]
+    }],
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: ['./src/setupTest.ts'],
   }
 });

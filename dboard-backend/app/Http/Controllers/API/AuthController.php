@@ -44,7 +44,7 @@ class AuthController extends Controller
         // パスワードチェックが正しくないまたはユーザーが見つからない場合、エラーを返す
         if (!$user || !Hash::check($request->password, $user->password)) {
             return response()->json([
-                'message' => 'The provided credentials are incorrect.'
+                'message' => 'Invalid credentials'
             ], 401);
         }
 
@@ -61,14 +61,15 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         $request->user()->tokens()->delete();
-        // ログアウトの状態更新(is_onlineをfalseへ更新)
-        $request->user()->updateLogoutStatus();
+        $user = $request->user();
+        $user->updateLogoutStatus();
+        $user->save();
         return response()->json([
             'message' => 'User logged out successfully'
         ]);
     }
 
-    public function me(Request $request)
+    public function user(Request $request)
     {
         return response()->json([
             'user' => $request->user(),

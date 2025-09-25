@@ -4,9 +4,7 @@ import './App.css'
 import { ConfigProvider } from 'antd';
 import jaJP from 'antd/locale/ja_JP';
 import { AuthProvider } from './features/auth/contexts/AuthContext';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { LoginPage } from './features/auth/pages/LoginPage';
-import { RegisterPage } from './features/auth/pages/RegisterPage';
+import { AppRouter } from './routers/AppRouter';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -21,21 +19,15 @@ const queryClient = new QueryClient({
   }
 });
 
-function App() {
 
+
+function App() {
 
   return (
     <ConfigProvider locale={jaJP}>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
-          <BrowserRouter>
-              <Routes>
-                {/* パブリックルート */}
-                <Route path="/login" element={<LoginPage />}/>
-                <Route path="/register" element={<RegisterPage />}/>
-                {/* 保護ルート */}
-              </Routes>
-          </BrowserRouter>
+          <AppRouter />
         </AuthProvider>
       </QueryClientProvider>
     </ConfigProvider>
