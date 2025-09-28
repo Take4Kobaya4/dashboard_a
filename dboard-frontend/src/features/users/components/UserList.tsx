@@ -2,7 +2,8 @@ import { Alert, Box, Chip, IconButton, Paper, Table, TableBody, TableCell, Table
 import styled from "styled-components";
 import type { User } from "../types/user";
 import { useUserListQuery } from "../hooks/useUserListQuery";
-import { Visibility } from "@mui/icons-material";
+import { Delete, Visibility } from "@mui/icons-material";
+import { useDeleteUserMutation } from "../hooks/useDeleteUserMutation";
 
 const Container = styled(Box)`
     padding: 2rem;
@@ -16,6 +17,17 @@ interface UserListProps {
 export const UserList = ({ onView }: UserListProps) => {
 
     const { data: users, isLoading, error } = useUserListQuery();
+    const deleteUserMutation = useDeleteUserMutation();
+
+    const handleDeleteUser = async(id: number) => {
+        if(window.confirm(`ID:${id}のユーザーを削除しますか？`)){
+            try {
+                await deleteUserMutation.mutateAsync(id);
+            } catch (error) {
+                console.error('ユーザー削除に失敗しました', error);
+            }
+        }
+    }
 
     if (isLoading) return <div>Loading...</div>;
     if(error) return <Alert severity="error">エラーが発生しました</Alert>;
@@ -60,6 +72,12 @@ export const UserList = ({ onView }: UserListProps) => {
                                 <TableCell>
                                     <IconButton onClick={() => onView?.(user)}>
                                         <Visibility />
+                                    </IconButton>
+                                    <IconButton
+                                        onClick={() => handleDeleteUser(user.id)}
+                                        disabled={deleteUserMutation.isPending}
+                                    >
+                                        <Delete />
                                     </IconButton>
                                 </TableCell>
                             </TableRow>
