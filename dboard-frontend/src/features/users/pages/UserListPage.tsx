@@ -7,13 +7,13 @@ import { Add } from "@mui/icons-material";
 
 const Container = styled(Box)`
     position: relative;
-    min-height: calc(100vh - 64px);
+    min-height: 100vh;
 `;
 
 const FloatingActionButton = styled(Fab)`
-    position: absolute;
-    bottom: 2rem;
-    right: 2rem;
+    position: fixed;
+    top: 2rem;
+    left: 2rem;
     z-index: 1000;
 `;
 
@@ -30,8 +30,6 @@ export const UserListPage = () => {
 
     return (
         <Container>
-            <UserList onView={handleView} />
-
             <FloatingActionButton
                 color="primary"
                 aria-label="add user"
@@ -39,6 +37,9 @@ export const UserListPage = () => {
             >
                 <Add />
             </FloatingActionButton>
+            <UserList onView={handleView} />
+
+            
         </Container>
     );
 }

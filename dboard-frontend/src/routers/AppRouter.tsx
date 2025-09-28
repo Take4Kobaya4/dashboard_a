@@ -5,6 +5,7 @@ import { Layout } from "../shared/components/layout/Layout";
 import { ProtectedRoute } from "./ProtectedRoute";
 import { UserListPage } from "../features/users/pages/UserListPage";
 import { UserDetailPage } from "../features/users/pages/UserDetailPage";
+import { CreateUserPage } from "../features/users/pages/CreateUserPage";
 
 export const AppRouter = () => {
 
@@ -32,6 +33,14 @@ export const AppRouter = () => {
                     <ProtectedRoute>
                         <Layout>
                             <UserDetailPage />
+                        </Layout>
+                    </ProtectedRoute>
+                }
+                />
+                <Route path="/users/create" element={
+                    <ProtectedRoute>
+                        <Layout>
+                            <CreateUserPage />
                         </Layout>
                     </ProtectedRoute>
                 }

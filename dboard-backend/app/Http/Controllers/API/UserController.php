@@ -17,7 +17,7 @@ class UserController extends Controller
     {
         $query = User::search($request->search);
 
-        $users = $query->orderBy('created_at', 'desc')->paginate(User::PER_PAGE);
+        $users = $query->paginate(User::PER_PAGE);
 
         return response()->json($users);
     }
