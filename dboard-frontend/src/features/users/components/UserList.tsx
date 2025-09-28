@@ -2,18 +2,13 @@ import { Alert, Box, Chip, IconButton, Paper, Table, TableBody, TableCell, Table
 import styled from "styled-components";
 import type { User } from "../types/user";
 import { useUserListQuery } from "../hooks/useUserListQuery";
-import { Visibility } from "@mui/icons-material";
+import { Delete, Visibility } from "@mui/icons-material";
+import { useDeleteUserMutation } from "../hooks/useDeleteUserMutation";
 
 const Container = styled(Box)`
     padding: 2rem;
 `;
 
-// const ActionContainer = styled(Box)`
-//     display: flex;
-//     gap: 1rem;
-//     margin-bottom: 2rem;
-//     align-items: center;
-// `;
 
 interface UserListProps {
     onView: (user: User) => void;
@@ -22,6 +17,17 @@ interface UserListProps {
 export const UserList = ({ onView }: UserListProps) => {
 
     const { data: users, isLoading, error } = useUserListQuery();
+    const deleteUserMutation = useDeleteUserMutation();
+
+    const handleDeleteUser = async(id: number) => {
+        if(window.confirm(`ID:${id}のユーザーを削除しますか？`)){
+            try {
+                await deleteUserMutation.mutateAsync(id);
+            } catch (error) {
+                console.error('ユーザー削除に失敗しました', error);
+            }
+        }
+    }
 
     if (isLoading) return <div>Loading...</div>;
     if(error) return <Alert severity="error">エラーが発生しました</Alert>;
@@ -67,6 +73,12 @@ export const UserList = ({ onView }: UserListProps) => {
                                     <IconButton onClick={() => onView?.(user)}>
                                         <Visibility />
                                     </IconButton>
+                                    <IconButton
+                                        onClick={() => handleDeleteUser(user.id)}
+                                        disabled={deleteUserMutation.isPending}
+                                    >
+                                        <Delete />
+                                    </IconButton>
                                 </TableCell>
                             </TableRow>
                         ))}
@@ -74,15 +86,6 @@ export const UserList = ({ onView }: UserListProps) => {
                 </Table>
             </TableContainer>
 
-            {/* {data && (
-                <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
-                    <Pagination
-                        count={data.last_page}
-                        page={page}
-                        onChange={(_, page) => setPage(page)}
-                    />
-                </Box>
-            )} */}
         </Container>
     );
 };

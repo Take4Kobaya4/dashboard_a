@@ -3,10 +3,15 @@ import styled from "styled-components";
 import { useAuth } from "../../../features/auth/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 
+export const HEADER_HEIGHT = 64; // ヘッダーの実際の高さに合わせてください
 
 const StyledAppBar = styled(AppBar)`
-    background-color: #3f51b5;
-    color: #fff;
+    height: ${HEADER_HEIGHT}px;
+    && {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+
+    }
 `;
 
 const StyledToolbar = styled(Toolbar)`
@@ -58,7 +63,6 @@ export const Header = () => {
                         <UserInfo>
                             {user && (
                                 <>
-                                    <Typography variant="body2">{user.name}さん</Typography>
                                     <Button
                                         variant="contained"
                                         color="secondary"
