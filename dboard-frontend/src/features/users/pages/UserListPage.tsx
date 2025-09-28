@@ -4,16 +4,12 @@ import styled from "styled-components";
 import type { User } from "../types/user";
 import { UserList } from "../components/UserList";
 import { Add } from "@mui/icons-material";
-
-const Container = styled(Box)`
-    position: relative;
-    min-height: 100vh;
-`;
+import { SIDEBAR_WIDTH } from "../../../shared/components/layout/Sidebar";
 
 const FloatingActionButton = styled(Fab)`
     position: fixed;
-    top: 2rem;
-    left: 2rem;
+    bottom: 1rem;
+    left: calc(${SIDEBAR_WIDTH} + 2rem);
     z-index: 1000;
 `;
 
@@ -29,7 +25,9 @@ export const UserListPage = () => {
     }
 
     return (
-        <Container>
+        <Box>
+            <UserList onView={handleView} />
+
             <FloatingActionButton
                 color="primary"
                 aria-label="add user"
@@ -37,9 +35,6 @@ export const UserListPage = () => {
             >
                 <Add />
             </FloatingActionButton>
-            <UserList onView={handleView} />
-
-            
-        </Container>
+        </Box>
     );
 }

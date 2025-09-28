@@ -6,6 +6,7 @@ import { ProtectedRoute } from "./ProtectedRoute";
 import { UserListPage } from "../features/users/pages/UserListPage";
 import { UserDetailPage } from "../features/users/pages/UserDetailPage";
 import { CreateUserPage } from "../features/users/pages/CreateUserPage";
+import { UpdateUserPage } from "../features/users/pages/UpdateUserPage";
 
 export const AppRouter = () => {
 
@@ -41,6 +42,14 @@ export const AppRouter = () => {
                     <ProtectedRoute>
                         <Layout>
                             <CreateUserPage />
+                        </Layout>
+                    </ProtectedRoute>
+                }
+                />
+                <Route path="/users/:id/edit" element={
+                    <ProtectedRoute>
+                        <Layout>
+                            <UpdateUserPage />
                         </Layout>
                     </ProtectedRoute>
                 }

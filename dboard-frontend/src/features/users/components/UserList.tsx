@@ -8,12 +8,6 @@ const Container = styled(Box)`
     padding: 2rem;
 `;
 
-// const ActionContainer = styled(Box)`
-//     display: flex;
-//     gap: 1rem;
-//     margin-bottom: 2rem;
-//     align-items: center;
-// `;
 
 interface UserListProps {
     onView: (user: User) => void;
@@ -74,15 +68,6 @@ export const UserList = ({ onView }: UserListProps) => {
                 </Table>
             </TableContainer>
 
-            {/* {data && (
-                <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
-                    <Pagination
-                        count={data.last_page}
-                        page={page}
-                        onChange={(_, page) => setPage(page)}
-                    />
-                </Box>
-            )} */}
         </Container>
     );
 };

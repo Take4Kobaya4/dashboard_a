@@ -10,7 +10,7 @@ export const API_ENDPOINTS = {
     USERS: {
         LIST: '/users',
         SHOW: (id: number) => `/users/${id}`,
-        CREATE: '/users',
+        CREATE: '/users/create',
         UPDATE: (id: number) => `/users/${id}`,
         DELETE: (id: number) => `/users/${id}`,
         ONLINE: '/online-users',
