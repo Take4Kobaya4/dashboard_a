@@ -62,14 +62,6 @@ class User extends Authenticatable
         ]);
     }
 
-    // ログアウト状態を更新(オンラインからオフラインへ更新)
-    public function updateLogoutStatus()
-    {
-        $this->update([
-            'is_online' => false,
-        ]);
-    }
-
     // オンラインかどうか判定（最終ログインから30分以内）
     public function isOnline()
     {
