@@ -48,7 +48,7 @@ export const userApi = {
         const response = await apiClient.get(
             API_ENDPOINTS.USERS.ONLINE
         );
-        return response.data.data;
+        return response.data.onlineUsers;
     },
 
     // 複数ユーザーを一括削除
