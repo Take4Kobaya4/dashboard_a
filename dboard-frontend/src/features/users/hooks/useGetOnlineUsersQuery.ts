@@ -6,5 +6,6 @@ export const useGetOnlineUsersQuery = () => {
         queryKey: ['online-users'],
         queryFn: () => userApi.getOnlineUsers(),
         refetchInterval: 30000,
+        staleTime: 1000 * 15,
     });
 }
