@@ -146,21 +146,13 @@ class UserController extends Controller
     // ログイン中ユーザーの複数選択削除
     public function bulkDelete(Request $request)
     {
-        $ids = $request->input('ids');
-
-        if(empty($ids) || !is_array($ids)) {
-            return response()->json([
-                'message' => 'Invalid request',
-            ], 400);
-        }
-
-        $updatedCount = User::whereIn('id', $ids)->update([
-            'is_online' => false
+        $updatedLogoutUsers = User::where('is_online', true)->update([
+            'is_online' => false,
         ]);
 
         return response()->json([
             'success' => true,
-            'message' => "{$updatedCount} users logged out successfully",
+            'message' => `{$updatedLogoutUsers->count()} users logged out successfully`,
         ]);
     }
 

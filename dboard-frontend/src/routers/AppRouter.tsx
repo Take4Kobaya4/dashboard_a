@@ -7,7 +7,6 @@ import { UserListPage } from "../features/users/pages/UserListPage";
 import { UserDetailPage } from "../features/users/pages/UserDetailPage";
 import { CreateUserPage } from "../features/users/pages/CreateUserPage";
 import { UpdateUserPage } from "../features/users/pages/UpdateUserPage";
-import { OnlineUserPage } from "../features/users/pages/OnlineUserPage";
 
 export const AppRouter = () => {
 
@@ -54,14 +53,6 @@ export const AppRouter = () => {
                         </Layout>
                     </ProtectedRoute>
                 }
-                />
-                <Route path="/online-users" element={
-                    <ProtectedRoute>
-                        <Layout>
-                            <OnlineUserPage />
-                        </Layout>
-                    </ProtectedRoute>
-                } 
                 />
             </Routes>
         </BrowserRouter>
